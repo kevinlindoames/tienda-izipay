@@ -1,0 +1,13 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+savePrefix: ""
+engineStrict: true
+strictPeerDependencies: true
+
+allowBuilds:
+  sharp: true
+  unrs-resolver: true
+  "@nestjs/core": true
+  "@swc/core": true

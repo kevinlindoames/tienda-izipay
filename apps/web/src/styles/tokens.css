@@ -1,0 +1,24 @@
+:root {
+  --color-page: #f4f3ef;
+  --color-surface: #ffffff;
+  --color-surface-soft: #e8e7e2;
+  --color-text: #2f302e;
+  --color-text-muted: #64655f;
+  --color-dark: #41413f;
+  --color-dark-deep: #292a28;
+  --color-brand: #91b33f;
+  --color-accent: #d78a3c;
+  --color-border: #d7d7d1;
+
+  --container-max: 1280px;
+  --header-height: 72px;
+  --product-nav-height: 82px;
+
+  --radius-button: 999px;
+  --radius-card: 24px;
+
+  --shadow-soft: 0 20px 60px rgb(0 0 0 / 0.08);
+
+  --space-section-mobile: 4.5rem;
+  --space-section-desktop: 7.5rem;
+}

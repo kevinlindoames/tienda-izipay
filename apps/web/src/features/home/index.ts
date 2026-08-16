@@ -23,3 +23,4 @@ export {
   MediaTextSection,
   type MediaTextSectionProps,
 } from "./components/media-text-section";
+export { HomeSkeleton } from "./components/home-skeleton";

@@ -22,6 +22,7 @@ describe("EditorialGridSection", () => {
               title: "Escenario A",
               body: "Detalle A",
               media: {
+                id: "test-media",
                 desktopSrc: null,
                 alt: "Media A",
               },
@@ -32,6 +33,7 @@ describe("EditorialGridSection", () => {
               title: "Escenario B",
               body: "Detalle B",
               media: {
+                id: "test-media",
                 desktopSrc: null,
                 alt: "Media B",
               },

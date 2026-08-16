@@ -1,8 +1,6 @@
 import type { ReactElement } from "react";
 
 import { ProductSubnav } from "@/components/layout/product-subnav";
-import { SiteFooter } from "@/components/layout/site-footer";
-import { SiteHeader } from "@/components/layout/site-header";
 import {
   CompatibilitySection,
   DarkHighlightSection,
@@ -17,7 +15,6 @@ import { homeMock } from "@/features/home/content/home.mock";
 export default function HomePage(): ReactElement {
   return (
     <>
-      <SiteHeader content={homeMock.header} />
       <ProductSubnav content={homeMock.productNavigation} />
 
       <main>
@@ -36,8 +33,6 @@ export default function HomePage(): ReactElement {
 
         <CompatibilitySection content={homeMock.compatibility} />
       </main>
-
-      <SiteFooter content={homeMock.footer} />
     </>
   );
 }

@@ -3,7 +3,7 @@
 import { Menu, X } from "lucide-react";
 import { useRef, useState, type KeyboardEvent, type ReactElement } from "react";
 
-import type { NavigationItem } from "@/features/home/types/home.types";
+import type { NavigationItem } from "@/content/site.types";
 import { cn } from "@/lib/cn";
 
 export interface MobileMenuProps {

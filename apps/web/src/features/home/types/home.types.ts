@@ -1,18 +1,17 @@
-export interface NavigationItem {
-  label: string;
-  href: string;
-}
+import type {
+  FooterContent,
+  NavigationItem,
+  SiteHeaderContent,
+} from "@/content/site.types";
+import type { MediaAsset } from "@/types/media.types";
+
+export type { FooterContent, NavigationItem } from "@/content/site.types";
+export type MediaContent = MediaAsset;
 
 export interface CallToAction {
   label: string;
   href: string;
   external?: boolean;
-}
-
-export interface MediaContent {
-  desktopSrc: string | null;
-  mobileSrc?: string | null;
-  alt: string;
 }
 
 export interface FeatureItem {
@@ -26,7 +25,7 @@ export interface MediaTextBlock {
   id: string;
   title: string;
   body: string;
-  media: MediaContent;
+  media: MediaAsset;
   mediaPosition: "left" | "right";
   tone?: "light" | "soft" | "dark";
 }
@@ -38,28 +37,8 @@ export interface EditorialGridContent {
   items: MediaTextBlock[];
 }
 
-export interface FooterContent {
-  brandName: string;
-  summary: string;
-  columns: Array<{
-    title: string;
-    links: NavigationItem[];
-  }>;
-  contactEmail?: string;
-  newsletter: {
-    title: string;
-    description: string;
-    statusLabel: string;
-  };
-  socialLabels: string[];
-  copyright: string;
-}
-
 export interface HomePageContent {
-  header: {
-    brandName: string;
-    navigation: NavigationItem[];
-  };
+  header: SiteHeaderContent;
   productNavigation: {
     productName: string;
     productCode?: string;
@@ -71,7 +50,7 @@ export interface HomePageContent {
     eyebrow?: string;
     title: string;
     subtitle?: string;
-    media: MediaContent;
+    media: MediaAsset;
   };
   introduction: {
     title: string;
@@ -89,7 +68,7 @@ export interface HomePageContent {
     eyebrow?: string;
     title: string;
     body: string;
-    media: MediaContent;
+    media: MediaAsset;
   };
   compatibility: {
     eyebrow?: string;

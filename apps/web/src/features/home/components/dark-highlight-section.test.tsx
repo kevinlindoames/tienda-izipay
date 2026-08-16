@@ -17,6 +17,7 @@ describe("DarkHighlightSection", () => {
           title: "Highlight",
           body: "Descripcion destacada",
           media: {
+            id: "test-media",
             desktopSrc: null,
             alt: "Grafico informativo",
           },

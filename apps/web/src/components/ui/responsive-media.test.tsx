@@ -71,6 +71,7 @@ describe("ResponsiveMedia", () => {
     );
 
     expect(picture).toBeInTheDocument();
+    expect(picture).toHaveClass("relative", "block", "h-full", "w-full");
     expect(source).toBeInTheDocument();
     expect(source?.getAttribute("srcset")).toBeTruthy();
     expect(source).toHaveAttribute("sizes", "(max-width: 767px) 100vw, 80vw");
@@ -124,5 +125,20 @@ describe("ResponsiveMedia", () => {
     expect(
       screen.getByRole("img", { name: "Hero principal" }),
     ).toBeInTheDocument();
+  });
+
+  it("permite cargar eager una imagen above the fold", () => {
+    render(
+      <ResponsiveMedia
+        desktopSrc="/media/catalog-lcp.jpg"
+        alt="Producto principal"
+        sizes="100vw"
+        loading="eager"
+      />,
+    );
+
+    expect(
+      screen.getByRole("img", { name: "Producto principal" }),
+    ).toHaveAttribute("loading", "eager");
   });
 });

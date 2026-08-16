@@ -89,7 +89,7 @@ test("Bloque A: el menu movil abre, navega y cierra", async ({
 
   await mobileNavigation.getByRole("link", { name: "Productos" }).click();
 
-  await expect(page).toHaveURL(/#features$/);
+  await expect(page).toHaveURL(/\/productos$/);
   await expect(
     page.getByRole("button", { name: "Abrir menu" }),
   ).toHaveAttribute("aria-expanded", "false");

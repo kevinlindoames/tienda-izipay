@@ -10,6 +10,7 @@ export interface ResponsiveMediaProps {
   mobileSrc?: string | null;
   alt: string;
   priority?: boolean;
+  loading?: "eager" | "lazy";
   sizes: string;
   className?: string;
 }
@@ -19,6 +20,7 @@ export function ResponsiveMedia({
   mobileSrc = null,
   alt,
   priority = false,
+  loading,
   sizes,
   className,
 }: ResponsiveMediaProps): ReactElement {
@@ -40,6 +42,7 @@ export function ResponsiveMedia({
       fill
       sizes={sizes}
       preload={priority}
+      loading={priority ? undefined : loading}
       className="object-cover"
     />
   );
@@ -60,7 +63,7 @@ export function ResponsiveMedia({
 
   return (
     <div className={mediaClassName}>
-      <picture>
+      <picture className="relative block h-full w-full">
         <source
           media="(max-width: 767px)"
           srcSet={mobileSrcSet}

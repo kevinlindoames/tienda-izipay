@@ -23,6 +23,7 @@ describe("HeroSection", () => {
           title: "Hero principal",
           subtitle: "Descripcion del hero",
           media: {
+            id: "test-media",
             desktopSrc: null,
             mobileSrc: null,
             alt: "Media del hero",
@@ -49,6 +50,7 @@ describe("HeroSection", () => {
         content={{
           title: "Hero minimo",
           media: {
+            id: "test-media",
             desktopSrc: null,
             alt: "Media minima",
           },

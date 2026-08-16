@@ -23,6 +23,7 @@ describe("MediaTextSection", () => {
           title: "Texto primero",
           body: "Contenido",
           media: {
+            id: "test-media",
             desktopSrc: null,
             alt: "Media demo",
           },
@@ -49,6 +50,7 @@ describe("MediaTextSection", () => {
           title: "Seccion oscura",
           body: "Contenido dark",
           media: {
+            id: "test-media",
             desktopSrc: null,
             alt: "Media dark",
           },
@@ -73,6 +75,7 @@ describe("MediaTextSection", () => {
           title: "Default",
           body: "Contenido",
           media: {
+            id: "test-media",
             desktopSrc: null,
             alt: "Media default",
           },

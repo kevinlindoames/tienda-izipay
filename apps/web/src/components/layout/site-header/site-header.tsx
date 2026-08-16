@@ -2,12 +2,12 @@ import type { ReactElement } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
-import type { HomePageContent } from "@/features/home/types/home.types";
+import type { SiteHeaderContent } from "@/content/site.types";
 
 import { MobileMenu } from "./mobile-menu";
 
 export interface SiteHeaderProps {
-  content: HomePageContent["header"];
+  content: SiteHeaderContent;
 }
 
 export function SiteHeader({ content }: SiteHeaderProps): ReactElement {
@@ -24,7 +24,7 @@ export function SiteHeader({ content }: SiteHeaderProps): ReactElement {
     <header className="sticky top-0 z-50 h-[var(--header-height)] border-b border-[var(--color-border)] bg-[var(--color-surface)]/95 backdrop-blur-xl">
       <Container className="grid h-full grid-cols-[1fr_auto] items-center gap-4 md:grid-cols-[1fr_auto_1fr]">
         <a
-          href="#overview"
+          href={content.brandHref ?? "#overview"}
           className="justify-self-start text-base font-semibold tracking-[-0.02em] text-[var(--color-text)] focus-visible:rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)]"
         >
           {content.brandName}

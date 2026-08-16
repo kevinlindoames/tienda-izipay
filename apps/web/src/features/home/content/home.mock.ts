@@ -1,14 +1,9 @@
+import { siteMock } from "@/content/site.mock";
+import { createMockMedia } from "@/lib/media/mock-media";
 import type { HomePageContent } from "../types/home.types";
 
 export const homeMock = {
-  header: {
-    brandName: "Marca provisional",
-    navigation: [
-      { label: "Productos", href: "#features" },
-      { label: "Soluciones", href: "#use-cases" },
-      { label: "Soporte", href: "#contact" },
-    ],
-  },
+  header: siteMock.header,
   productNavigation: {
     productName: "Producto destacado",
     productCode: "C\u00f3digo provisional",
@@ -32,11 +27,11 @@ export const homeMock = {
     title: "Una experiencia amplia, clara y profesional",
     subtitle:
       "Contenido provisional preparado para ser administrado posteriormente.",
-    media: {
-      desktopSrc: null,
-      mobileSrc: null,
+    media: createMockMedia({
+      id: "home-media-1",
+      seed: "home-section-1",
       alt: "Imagen principal pendiente de entrega",
-    },
+    }),
   },
   introduction: {
     title:
@@ -120,11 +115,11 @@ export const homeMock = {
         id: "editorial-collaboration",
         title: "Colaboraci\u00f3n m\u00e1s natural",
         body: "Bloque provisional para explicar un escenario de colaboraci\u00f3n, reuni\u00f3n o trabajo compartido.",
-        media: {
-          desktopSrc: null,
-          mobileSrc: null,
+        media: createMockMedia({
+          id: "home-media-2",
+          seed: "home-section-2",
           alt: "Imagen editorial de colaboraci\u00f3n pendiente",
-        },
+        }),
         mediaPosition: "left",
         tone: "light",
       },
@@ -132,11 +127,11 @@ export const homeMock = {
         id: "editorial-flexibility",
         title: "Configuraci\u00f3n flexible",
         body: "Bloque provisional para explicar c\u00f3mo el producto puede adaptarse a diferentes espacios y necesidades.",
-        media: {
-          desktopSrc: null,
-          mobileSrc: null,
+        media: createMockMedia({
+          id: "home-media-3",
+          seed: "home-section-3",
           alt: "Imagen editorial de configuraci\u00f3n flexible pendiente",
-        },
+        }),
         mediaPosition: "right",
         tone: "soft",
       },
@@ -147,11 +142,11 @@ export const homeMock = {
       id: "workflow",
       title: "Un flujo de trabajo m\u00e1s simple",
       body: "Contenido provisional para explicar una experiencia de uso clara, directa y preparada para distintos contextos.",
-      media: {
-        desktopSrc: null,
-        mobileSrc: null,
+      media: createMockMedia({
+        id: "home-media-4",
+        seed: "home-section-4",
         alt: "Imagen de flujo de trabajo pendiente",
-      },
+      }),
       mediaPosition: "left",
       tone: "light",
     },
@@ -159,11 +154,11 @@ export const homeMock = {
       id: "adaptability",
       title: "Se adapta a tu forma de trabajar",
       body: "Contenido provisional para una secci\u00f3n alternada con foco en flexibilidad y facilidad de configuraci\u00f3n.",
-      media: {
-        desktopSrc: null,
-        mobileSrc: null,
+      media: createMockMedia({
+        id: "home-media-5",
+        seed: "home-section-5",
         alt: "Imagen de adaptabilidad pendiente",
-      },
+      }),
       mediaPosition: "right",
       tone: "soft",
     },
@@ -171,11 +166,11 @@ export const homeMock = {
       id: "design",
       title: "Dise\u00f1ado para integrarse sin complicaciones",
       body: "Contenido provisional para presentar una tercera escena editorial antes de la secci\u00f3n de compatibilidad.",
-      media: {
-        desktopSrc: null,
-        mobileSrc: null,
+      media: createMockMedia({
+        id: "home-media-6",
+        seed: "home-section-6",
         alt: "Imagen de integraci\u00f3n pendiente",
-      },
+      }),
       mediaPosition: "left",
       tone: "light",
     },
@@ -184,11 +179,11 @@ export const homeMock = {
     eyebrow: "Tecnolog\u00eda destacada",
     title: "Funcionalidad destacada",
     body: "Descripci\u00f3n provisional para una secci\u00f3n de alto contraste que presentar\u00e1 una capacidad clave del producto.",
-    media: {
-      desktopSrc: null,
-      mobileSrc: null,
+    media: createMockMedia({
+      id: "home-media-7",
+      seed: "home-section-7",
       alt: "Gr\u00e1fico informativo destacado pendiente",
-    },
+    }),
   },
   compatibility: {
     eyebrow: "Compatibilidad",
@@ -228,45 +223,5 @@ export const homeMock = {
       },
     ],
   },
-  footer: {
-    brandName: "Marca provisional",
-    summary:
-      "Informaci\u00f3n provisional de marca para completar la estructura visual del footer hasta recibir el contenido definitivo.",
-    columns: [
-      {
-        title: "Productos",
-        links: [
-          { label: "Cat\u00e1logo", href: "/productos" },
-          { label: "Soluciones", href: "/soluciones" },
-        ],
-      },
-      {
-        title: "Empresa",
-        links: [
-          { label: "Nosotros", href: "/empresa" },
-          { label: "Contacto", href: "/contacto" },
-        ],
-      },
-      {
-        title: "Ayuda",
-        links: [
-          { label: "Soporte", href: "/soporte" },
-          { label: "Preguntas frecuentes", href: "/preguntas-frecuentes" },
-        ],
-      },
-    ],
-    contactEmail: "contacto@ejemplo.com",
-    newsletter: {
-      title: "Novedades",
-      description:
-        "Espacio visual provisional para una futura suscripci\u00f3n. Todav\u00eda no env\u00eda datos.",
-      statusLabel: "Suscripci\u00f3n pendiente de activaci\u00f3n",
-    },
-    socialLabels: [
-      "Instagram pendiente",
-      "LinkedIn pendiente",
-      "YouTube pendiente",
-    ],
-    copyright: "\u00a9 2026 Marca provisional.",
-  },
+  footer: siteMock.footer,
 } satisfies HomePageContent;

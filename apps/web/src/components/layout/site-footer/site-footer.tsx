@@ -1,7 +1,7 @@
 import type { ReactElement } from "react";
 
 import { Container } from "@/components/ui/container";
-import type { FooterContent } from "@/features/home/types/home.types";
+import type { FooterContent } from "@/content/site.types";
 
 export interface SiteFooterProps {
   content: FooterContent;

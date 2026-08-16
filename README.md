@@ -30,7 +30,191 @@ Monorepo para una tienda ecommerce con frontend en **Next.js** y backend en **Ne
 
 ---
 
-## 2. Estructura del repositorio
+## 2. Instalación de herramientas en Windows
+
+Esta sección está pensada para una PC nueva. Si Git, Node.js y pnpm ya están instalados con las versiones correctas, se puede ir directamente a **Setup rápido**.
+
+### 2.1 Verificar WinGet
+
+```powershell
+winget --version
+```
+
+### 2.2 Instalar Git
+
+Instalación estándar con WinGet:
+
+```powershell
+winget install --id Git.Git -e --source winget
+```
+
+Cerrar y volver a abrir PowerShell y verificar:
+
+```powershell
+git --version
+```
+
+Configurar la identidad de Git:
+
+```powershell
+git config --global user.name "TU NOMBRE"
+git config --global user.email "TU_CORREO"
+```
+
+Comprobar:
+
+```powershell
+git config --global user.name
+git config --global user.email
+```
+
+> La instalación estándar de Git puede solicitar permisos de Windows. Si una PC corporativa no permite elevación, utilizar Git Portable o solicitar a soporte la instalación.
+
+### 2.3 Instalar Node.js 24.19.0
+
+El proyecto utiliza **Node.js 24.19.0 LTS** para desarrollo local.
+
+#### Opción A — Instalador oficial
+
+```powershell
+$NodeVersion = "24.19.0"
+$NodeInstaller = "$env:TEMP\node-v$NodeVersion-x64.msi"
+
+Invoke-WebRequest `
+  -Uri "https://nodejs.org/dist/v$NodeVersion/node-v$NodeVersion-x64.msi" `
+  -OutFile $NodeInstaller
+
+Start-Process `
+  -FilePath "msiexec.exe" `
+  -ArgumentList "/i `"$NodeInstaller`"" `
+  -Wait
+
+Remove-Item $NodeInstaller -Force
+```
+
+Cerrar y volver a abrir PowerShell y verificar:
+
+```powershell
+node --version
+```
+
+Resultado esperado:
+
+```text
+v24.19.0
+```
+
+> El instalador MSI puede solicitar permisos de administrador.
+
+#### Opción B — Node.js portable sin permisos de administrador
+
+```powershell
+$NodeVersion = "24.19.0"
+$NodeZip = "$env:TEMP\node-v$NodeVersion-win-x64.zip"
+$ToolsDir = "$env:LOCALAPPDATA\Programs"
+$NodeDir = "$ToolsDir\node-v$NodeVersion-win-x64"
+
+New-Item -ItemType Directory -Force -Path $ToolsDir | Out-Null
+
+Invoke-WebRequest `
+  -Uri "https://nodejs.org/dist/v$NodeVersion/node-v$NodeVersion-win-x64.zip" `
+  -OutFile $NodeZip
+
+Expand-Archive `
+  -Path $NodeZip `
+  -DestinationPath $ToolsDir `
+  -Force
+
+Remove-Item $NodeZip -Force
+
+$UserPath = [Environment]::GetEnvironmentVariable("Path", "User")
+
+if ($UserPath -notlike "*$NodeDir*") {
+    [Environment]::SetEnvironmentVariable(
+        "Path",
+        "$NodeDir;$UserPath",
+        "User"
+    )
+}
+
+$env:Path = "$NodeDir;$env:Path"
+
+node --version
+```
+
+Resultado esperado:
+
+```text
+v24.19.0
+```
+
+### 2.4 Habilitar Corepack e instalar pnpm 11.17.0
+
+Verificar Corepack:
+
+```powershell
+corepack --version
+```
+
+Habilitar pnpm:
+
+```powershell
+corepack enable pnpm
+```
+
+Instalar y activar la versión exacta:
+
+```powershell
+corepack install -g pnpm@11.17.0
+```
+
+Verificar:
+
+```powershell
+pnpm.cmd --version
+```
+
+Resultado esperado:
+
+```text
+11.17.0
+```
+
+Si PowerShell bloquea `pnpm.ps1`, utilizar siempre:
+
+```powershell
+pnpm.cmd --version
+```
+
+### 2.5 Resumen de instalación de herramientas
+
+```powershell
+winget install --id Git.Git -e --source winget
+```
+
+Instalar Node.js 24.19.0 con el bloque anterior y, después de reabrir PowerShell:
+
+```powershell
+node --version
+git --version
+
+corepack enable pnpm
+corepack install -g pnpm@11.17.0
+
+pnpm.cmd --version
+```
+
+Versiones esperadas:
+
+```text
+Node.js: v24.19.0
+pnpm:    11.17.0
+Git:     versión instalada disponible
+```
+
+---
+
+## 3. Estructura del repositorio
 
 ```text
 tienda-izipay/
@@ -56,7 +240,7 @@ tienda-izipay/
 
 ---
 
-## 3. Setup rápido
+## 4. Setup rápido
 
 Si la nueva PC ya tiene Git, Node.js 24.19.0 y pnpm 11.17.0 configurados:
 
@@ -81,7 +265,7 @@ Backend:  http://localhost:3001/api/v1/health
 
 ---
 
-# 4. Setup completo en una PC Windows nueva
+# 5. Setup completo en una PC Windows nueva
 
 ## Paso 1 — Instalar Git
 
@@ -185,7 +369,7 @@ corepack pnpm@11.17.0 install --frozen-lockfile
 
 ---
 
-# 5. Clonar el repositorio
+# 6. Clonar el repositorio
 
 Elegir una carpeta de trabajo y ejecutar:
 
@@ -210,7 +394,7 @@ main
 
 ---
 
-# 6. Instalar dependencias
+# 7. Instalar dependencias
 
 Siempre ejecutar desde la raíz del monorepo:
 
@@ -233,7 +417,7 @@ Tampoco borrar `pnpm-lock.yaml` para "arreglar" una instalación.
 
 ---
 
-# 7. Validar el ambiente después de clonar
+# 8. Validar el ambiente después de clonar
 
 Comprobar herramientas:
 
@@ -269,7 +453,7 @@ Si todo termina sin errores, la instalación local está correctamente preparada
 
 ---
 
-# 8. Ejecutar el proyecto en desarrollo
+# 9. Ejecutar el proyecto en desarrollo
 
 ## Frontend + backend
 
@@ -320,7 +504,7 @@ Respuesta esperada:
 
 ---
 
-# 9. Scripts principales
+# 10. Scripts principales
 
 Ejecutar los scripts desde la raíz del repositorio.
 
@@ -346,7 +530,7 @@ Ejecutar los scripts desde la raíz del repositorio.
 
 ---
 
-# 10. Pruebas E2E en una PC nueva
+# 11. Pruebas E2E en una PC nueva
 
 Playwright necesita un navegador instalado para ejecutar las pruebas E2E.
 
@@ -370,7 +554,7 @@ pnpm.cmd test:a11y
 
 ---
 
-# 11. Build de producción
+# 12. Build de producción
 
 ## Todo el monorepo
 
@@ -394,7 +578,7 @@ Actualmente el frontend utiliza Next.js 16 con Turbopack para el proceso de buil
 
 ---
 
-# 12. Variables de entorno
+# 13. Variables de entorno
 
 Actualmente el frontend base puede arrancar sin variables de entorno obligatorias y el backend utiliza `PORT` solamente de forma opcional.
 
@@ -426,7 +610,7 @@ DATABASE_URL=
 
 ---
 
-# 13. Flujo recomendado para continuar el desarrollo
+# 14. Flujo recomendado para continuar el desarrollo
 
 Antes de comenzar:
 
@@ -491,7 +675,7 @@ git push -u origin feature/nombre-funcionalidad
 
 ---
 
-# 14. Mantener una PC secundaria actualizada
+# 15. Mantener una PC secundaria actualizada
 
 Si el repositorio ya fue clonado anteriormente:
 
@@ -510,7 +694,7 @@ Nunca continuar programando sobre una copia desactualizada sin ejecutar primero 
 
 ---
 
-# 15. Despliegue actual
+# 16. Despliegue actual
 
 ## Frontend
 

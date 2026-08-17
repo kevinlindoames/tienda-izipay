@@ -25,8 +25,17 @@
     "test:a11y": "pnpm --filter web test:a11y",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
-    "ci": "pnpm install --frozen-lockfile && pnpm check && pnpm test:e2e"
+    "check": "pnpm format:check \u0026\u0026 pnpm lint \u0026\u0026 pnpm typecheck \u0026\u0026 pnpm test \u0026\u0026 pnpm build",
+    "ci": "pnpm install --frozen-lockfile \u0026\u0026 pnpm check \u0026\u0026 pnpm test:e2e",
+    "db:format": "pnpm --filter api prisma:format",
+    "db:validate": "pnpm --filter api prisma:validate",
+    "db:generate": "pnpm --filter api prisma:generate",
+    "db:migrate": "pnpm --filter api prisma:migrate:dev",
+    "db:deploy": "pnpm --filter api prisma:migrate:deploy",
+    "db:seed": "pnpm --filter api prisma:seed",
+    "db:studio": "pnpm --filter api prisma:studio",
+    "db:smoke": "pnpm --filter api prisma:smoke",
+    "db:typecheck": "pnpm --filter api prisma:typecheck"
   },
   "devDependencies": {
     "prettier": "3.9.6",

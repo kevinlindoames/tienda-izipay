@@ -8,3 +8,4 @@ test-results
 .turbo
 pnpm-lock.yaml
 apps/web/next-env.d.ts
+apps/api/src/generated/prisma/

@@ -1,0 +1,143 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  runtime      = "nodejs"
+  moduleFormat = "cjs"
+  engineType   = "client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ProductStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+enum MediaProvider {
+  MOCK
+  SUPABASE
+  EXTERNAL
+}
+
+enum InventoryMovementType {
+  INITIAL_STOCK
+  ADJUSTMENT
+  RESERVATION
+  RELEASE
+  SALE
+  RETURN
+  CANCELLATION
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  slug        String    @unique @db.VarChar(120)
+  name        String    @db.VarChar(160)
+  description String?
+  isActive    Boolean   @default(true)
+  sortOrder   Int       @default(0)
+  products    Product[]
+  createdAt   DateTime  @default(now()) @db.Timestamptz(3)
+  updatedAt   DateTime  @updatedAt @db.Timestamptz(3)
+
+  @@index([isActive, sortOrder])
+  @@map("categories")
+}
+
+model Product {
+  id                  String              @id @default(cuid())
+  slug                String              @unique @db.VarChar(160)
+  sku                 String              @unique @db.VarChar(80)
+  name                String              @db.VarChar(200)
+  shortDescription    String              @db.VarChar(500)
+  description         String
+  priceMinor          Int
+  compareAtPriceMinor Int?
+  currency            String              @default("PEN") @db.VarChar(3)
+  status              ProductStatus       @default(DRAFT)
+  featured            Boolean             @default(false)
+  categoryId          String
+  category            Category            @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  images              ProductImage[]
+  inventory           Inventory?
+  inventoryMovements  InventoryMovement[]
+  createdAt           DateTime            @default(now()) @db.Timestamptz(3)
+  updatedAt           DateTime            @updatedAt @db.Timestamptz(3)
+
+  @@index([categoryId, status])
+  @@index([status, featured])
+  @@map("products")
+}
+
+model MediaAsset {
+  id            String         @id @default(cuid())
+  provider      MediaProvider  @default(MOCK)
+  bucket        String?        @db.VarChar(120)
+  storageKey    String?        @db.VarChar(500)
+  desktopUrl    String
+  mobileUrl     String?
+  alt           String         @db.VarChar(500)
+  width         Int?
+  height        Int?
+  mimeType      String?        @db.VarChar(120)
+  productImages ProductImage[]
+  createdAt     DateTime       @default(now()) @db.Timestamptz(3)
+  updatedAt     DateTime       @updatedAt @db.Timestamptz(3)
+
+  @@index([provider])
+  @@index([storageKey])
+  @@map("media_assets")
+}
+
+model ProductImage {
+  id           String     @id @default(cuid())
+  productId    String
+  mediaAssetId String
+  position     Int        @default(0)
+  isPrimary    Boolean    @default(false)
+  product      Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  mediaAsset   MediaAsset @relation(fields: [mediaAssetId], references: [id], onDelete: Restrict)
+  createdAt    DateTime   @default(now()) @db.Timestamptz(3)
+  updatedAt    DateTime   @updatedAt @db.Timestamptz(3)
+
+  @@unique([productId, mediaAssetId])
+  @@unique([productId, position], map: "product_images_productId_position_key")
+  @@index([productId, isPrimary])
+  @@map("product_images")
+}
+
+model Inventory {
+  id                String   @id @default(cuid())
+  productId         String   @unique
+  stockOnHand       Int      @default(0)
+  reserved          Int      @default(0)
+  lowStockThreshold Int      @default(5)
+  trackStock        Boolean  @default(true)
+  allowBackorder    Boolean  @default(false)
+  version           Int      @default(0)
+  product           Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt         DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt         DateTime @updatedAt @db.Timestamptz(3)
+
+  @@map("inventories")
+}
+
+model InventoryMovement {
+  id            String                @id @default(cuid())
+  productId     String
+  type          InventoryMovementType
+  quantityDelta Int
+  reservedDelta Int                   @default(0)
+  referenceType String?               @db.VarChar(80)
+  referenceId   String?               @db.VarChar(160)
+  note          String?               @db.VarChar(500)
+  product       Product               @relation(fields: [productId], references: [id], onDelete: Restrict)
+  createdAt     DateTime              @default(now()) @db.Timestamptz(3)
+
+  @@index([productId, createdAt])
+  @@index([referenceType, referenceId])
+  @@map("inventory_movements")
+}

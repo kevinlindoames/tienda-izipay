@@ -44,10 +44,25 @@ function getApiBaseUrl(): string {
   return baseUrl.toString().replace(/\/+$/, "");
 }
 
-export async function apiGet(path: string): Promise<unknown> {
+function assertSafeApiPath(path: string): void {
   if (!path.startsWith("/") || path.startsWith("//")) {
     throw new Error("API path must start with exactly one slash.");
   }
+}
+
+async function parseJsonResponse(
+  response: Response,
+  path: string,
+): Promise<unknown> {
+  try {
+    return await response.json();
+  } catch {
+    throw new Error(`API returned invalid JSON for ${path}.`);
+  }
+}
+
+export async function apiGet(path: string): Promise<unknown> {
+  assertSafeApiPath(path);
 
   const requestUrl = `${getApiBaseUrl()}${path}`;
 
@@ -70,9 +85,34 @@ export async function apiGet(path: string): Promise<unknown> {
     throw new ApiHttpError(response.status, path);
   }
 
+  return parseJsonResponse(response, path);
+}
+
+export async function apiPost(path: string, body: unknown): Promise<unknown> {
+  assertSafeApiPath(path);
+
+  const requestUrl = `${getApiBaseUrl()}${path}`;
+
+  let response: Response;
+
   try {
-    return await response.json();
+    response = await fetch(requestUrl, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+      cache: "no-store",
+      signal: AbortSignal.timeout(API_TIMEOUT_MS),
+    });
   } catch {
-    throw new Error(`API returned invalid JSON for ${path}.`);
+    throw new Error(`API request could not reach the backend for ${path}.`);
   }
+
+  if (!response.ok) {
+    throw new ApiHttpError(response.status, path);
+  }
+
+  return parseJsonResponse(response, path);
 }

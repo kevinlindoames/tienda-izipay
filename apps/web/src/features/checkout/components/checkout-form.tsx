@@ -5,13 +5,20 @@ import { useState, type ReactElement } from "react";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
+import { useCartStore } from "@/features/cart/stores/cart.store";
 
+import { createOrder } from "../api/orders.client";
 import {
   checkoutSchema,
   type CheckoutFormInput,
   type CheckoutFormOutput,
 } from "../schemas/checkout.schema";
 import { useCheckoutDraftStore } from "../stores/checkout-draft.store";
+import type {
+  BackendDeliveryMode,
+  CreateOrderRequest,
+  CreatedOrderSummary,
+} from "../types/order.types";
 import { CustomerFields } from "./customer-fields";
 import { DeliveryFields } from "./delivery-fields";
 
@@ -28,12 +35,27 @@ const emptyCheckoutValues: CheckoutFormInput = {
   reference: "",
 };
 
-export function CheckoutForm(): ReactElement {
+interface CheckoutFormProps {
+  onOrderCreated: (order: CreatedOrderSummary) => void;
+}
+
+function toBackendDeliveryMode(
+  deliveryMode: CheckoutFormOutput["deliveryMode"],
+): BackendDeliveryMode {
+  return deliveryMode === "delivery" ? "DELIVERY" : "PICKUP";
+}
+
+export function CheckoutForm({
+  onOrderCreated,
+}: CheckoutFormProps): ReactElement {
+  const items = useCartStore((state) => state.items);
+  const clearCart = useCartStore((state) => state.clearCart);
+
   const draft = useCheckoutDraftStore((state) => state.draft);
-
   const setDraft = useCheckoutDraftStore((state) => state.setDraft);
+  const clearDraft = useCheckoutDraftStore((state) => state.clearDraft);
 
-  const [reviewReady, setReviewReady] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
     register,
@@ -49,20 +71,55 @@ export function CheckoutForm(): ReactElement {
 
   const deliveryMode = watch("deliveryMode") ?? "delivery";
 
-  function submitValidDraft(values: CheckoutFormOutput): void {
+  async function submitOrder(values: CheckoutFormOutput): Promise<void> {
+    setSubmitError(null);
     setDraft(values);
-    setReviewReady(true);
+
+    const payload: CreateOrderRequest = {
+      firstName: values.firstName,
+      lastName: values.lastName,
+      email: values.email,
+      phone: values.phone,
+      deliveryMode: toBackendDeliveryMode(values.deliveryMode),
+
+      ...(values.deliveryMode === "delivery"
+        ? {
+            department: values.department,
+            province: values.province,
+            district: values.district,
+            address: values.address,
+          }
+        : {}),
+
+      ...(values.reference
+        ? {
+            reference: values.reference,
+          }
+        : {}),
+
+      items: items.map((item) => ({
+        productId: item.productId,
+        quantity: item.quantity,
+      })),
+    };
+
+    try {
+      const order = await createOrder(payload);
+
+      onOrderCreated(order);
+      clearCart();
+      clearDraft();
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error
+          ? error.message
+          : "No pudimos crear el pedido. Intenta nuevamente.",
+      );
+    }
   }
 
   return (
-    <form
-      noValidate
-      className="space-y-6"
-      onChange={() => {
-        setReviewReady(false);
-      }}
-      onSubmit={handleSubmit(submitValidDraft)}
-    >
+    <form noValidate className="space-y-6" onSubmit={handleSubmit(submitOrder)}>
       <CustomerFields register={register} errors={errors} />
 
       <DeliveryFields
@@ -74,32 +131,23 @@ export function CheckoutForm(): ReactElement {
       <div className="rounded-[var(--radius-card)] border border-[var(--color-border)] bg-[var(--color-surface)] p-6">
         <Button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || items.length === 0}
           className="w-full sm:w-auto"
         >
-          Revisar pedido
+          {isSubmitting ? "Creando pedido..." : "Crear pedido"}
         </Button>
 
         <p className="mt-4 max-w-2xl text-xs leading-5 text-[var(--color-text-muted)]">
-          Este paso solo valida tus datos. Todavia no crea un pedido ni realiza
-          ningun cobro.
+          El servidor volvera a validar precios y stock antes de registrar el
+          pedido. Este paso todavia no realiza ningun cobro.
         </p>
 
-        {reviewReady ? (
+        {submitError ? (
           <div
-            role="status"
-            aria-live="polite"
-            className="mt-5 rounded-[var(--radius-card)] bg-[var(--color-surface-soft)] p-4"
+            role="alert"
+            className="mt-5 rounded-[var(--radius-card)] border border-[var(--color-border)] bg-[var(--color-surface-soft)] p-4 text-sm text-[var(--color-text)]"
           >
-            <p className="font-semibold text-[var(--color-text)]">
-              Datos listos para revisar
-            </p>
-
-            <p className="mt-1 text-sm leading-6 text-[var(--color-text-muted)]">
-              El borrador queda disponible solo durante esta sesion. La creacion
-              y revalidacion real del pedido se implementara en el siguiente
-              bloque.
-            </p>
+            {submitError}
           </div>
         ) : null}
       </div>

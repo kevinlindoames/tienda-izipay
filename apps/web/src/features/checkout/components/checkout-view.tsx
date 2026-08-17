@@ -1,17 +1,26 @@
 "use client";
 
 import Link from "next/link";
-import type { ReactElement } from "react";
+import { useState, type ReactElement } from "react";
 
 import { useCartStore } from "@/features/cart/stores/cart.store";
 
+import type { CreatedOrderSummary } from "../types/order.types";
 import { CheckoutForm } from "./checkout-form";
 import { CheckoutSummary } from "./checkout-summary";
+import { OrderSuccess } from "./order-success";
 
 export function CheckoutView(): ReactElement {
   const items = useCartStore((state) => state.items);
-
   const hasHydrated = useCartStore((state) => state.hasHydrated);
+
+  const [createdOrder, setCreatedOrder] = useState<CreatedOrderSummary | null>(
+    null,
+  );
+
+  if (createdOrder) {
+    return <OrderSuccess order={createdOrder} />;
+  }
 
   if (!hasHydrated) {
     return (
@@ -48,7 +57,7 @@ export function CheckoutView(): ReactElement {
 
   return (
     <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start">
-      <CheckoutForm />
+      <CheckoutForm onOrderCreated={setCreatedOrder} />
 
       <CheckoutSummary items={items} />
     </div>

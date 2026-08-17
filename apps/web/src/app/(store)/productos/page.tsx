@@ -11,6 +11,8 @@ import {
 } from "@/features/catalog";
 import type { CatalogSearchParams } from "@/features/catalog/utils/catalog-search-params";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Productos",
   description:

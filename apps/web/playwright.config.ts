@@ -1,5 +1,9 @@
 import { defineConfig, devices } from "@playwright/test";
 
+const localApiBaseUrl = "http://127.0.0.1:3001/api/v1";
+
+process.env.API_BASE_URL = localApiBaseUrl;
+
 export default defineConfig({
   testDir: "./e2e",
   fullyParallel: true,
@@ -13,12 +17,22 @@ export default defineConfig({
     screenshot: "only-on-failure",
     video: "retain-on-failure",
   },
-  webServer: {
-    command: "pnpm build && pnpm start",
-    url: "http://127.0.0.1:3000",
-    reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
-  },
+  webServer: [
+    {
+      name: "api",
+      command: "pnpm -C ../.. build:api && pnpm -C ../.. start:api",
+      url: `${localApiBaseUrl}/health`,
+      reuseExistingServer: !process.env.CI,
+      timeout: 120_000,
+    },
+    {
+      name: "web",
+      command: "pnpm build && pnpm start",
+      url: "http://127.0.0.1:3000",
+      reuseExistingServer: !process.env.CI,
+      timeout: 120_000,
+    },
+  ],
   projects: [
     {
       name: "chromium",

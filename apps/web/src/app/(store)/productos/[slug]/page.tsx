@@ -5,14 +5,10 @@ import type { ReactElement } from "react";
 import { Container } from "@/components/ui/container";
 import { ProductDetail, catalogRepository } from "@/features/catalog";
 
+export const dynamic = "force-dynamic";
+
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
-}
-
-export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
-  const slugs = await catalogRepository.getAllSlugs();
-
-  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({

@@ -32,6 +32,18 @@ enum InventoryMovementType {
   CANCELLATION
 }
 
+enum OrderStatus {
+  PENDING_PAYMENT
+  PAID
+  CANCELLED
+  EXPIRED
+}
+
+enum DeliveryMode {
+  DELIVERY
+  PICKUP
+}
+
 model Category {
   id          String    @id @default(cuid())
   slug        String    @unique @db.VarChar(120)
@@ -64,6 +76,7 @@ model Product {
   images              ProductImage[]
   inventory           Inventory?
   inventoryMovements  InventoryMovement[]
+  orderItems          OrderItem[]
   createdAt           DateTime            @default(now()) @db.Timestamptz(3)
   updatedAt           DateTime            @updatedAt @db.Timestamptz(3)
 
@@ -140,4 +153,57 @@ model InventoryMovement {
   @@index([productId, createdAt])
   @@index([referenceType, referenceId])
   @@map("inventory_movements")
+}
+
+model Order {
+  id          String      @id @default(cuid())
+  orderNumber String      @unique @db.VarChar(40)
+  status      OrderStatus @default(PENDING_PAYMENT)
+  currency    String      @default("PEN") @db.VarChar(3)
+
+  customerFirstName String @db.VarChar(80)
+  customerLastName  String @db.VarChar(80)
+  customerEmail     String @db.VarChar(254)
+  customerPhone     String @db.VarChar(30)
+
+  deliveryMode DeliveryMode
+  department   String?      @db.VarChar(120)
+  province     String?      @db.VarChar(120)
+  district     String?      @db.VarChar(120)
+  address      String?      @db.VarChar(200)
+  reference    String?      @db.VarChar(200)
+
+  subtotalMinor    Int
+  deliveryFeeMinor Int @default(0)
+  totalMinor       Int
+
+  items OrderItem[]
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  @@index([status, createdAt])
+  @@index([customerEmail, createdAt])
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String @id @default(cuid())
+  orderId   String
+  productId String
+
+  sku            String @db.VarChar(80)
+  productName    String @db.VarChar(200)
+  unitPriceMinor Int
+  quantity       Int
+  subtotalMinor  Int
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+
+  @@index([orderId])
+  @@index([productId])
+  @@map("order_items")
 }

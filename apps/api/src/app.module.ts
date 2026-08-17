@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { CatalogModule } from './catalog/catalog.module';
 import { validateEnvironment } from './config/env.validation';
 import { PrismaModule } from './database/prisma.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { PrismaModule } from './database/prisma.module';
     }),
     PrismaModule,
     CatalogModule,
+    OrdersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

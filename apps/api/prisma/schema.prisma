@@ -207,3 +207,42 @@ model OrderItem {
   @@index([productId])
   @@map("order_items")
 }
+
+enum AdminRole {
+  OWNER
+  ADMIN
+}
+
+model AdminUser {
+  id           String    @id @default(cuid())
+  email        String    @unique @db.VarChar(254)
+  passwordHash String    @db.VarChar(255)
+  firstName    String    @db.VarChar(80)
+  lastName     String    @db.VarChar(80)
+  role         AdminRole @default(ADMIN)
+  isActive     Boolean   @default(true)
+
+  sessions AdminSession[]
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  @@index([isActive])
+  @@map("admin_users")
+}
+
+model AdminSession {
+  id         String    @id @default(cuid())
+  adminId    String
+  tokenHash  String    @unique @db.VarChar(64)
+  expiresAt  DateTime  @db.Timestamptz(3)
+  lastUsedAt DateTime? @db.Timestamptz(3)
+
+  admin AdminUser @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+
+  @@index([adminId, expiresAt])
+  @@index([expiresAt])
+  @@map("admin_sessions")
+}

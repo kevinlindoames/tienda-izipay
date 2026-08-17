@@ -2,6 +2,10 @@ import "server-only";
 
 const API_TIMEOUT_MS = 8_000;
 
+interface ApiRequestOptions {
+  headers?: Record<string, string>;
+}
+
 export class ApiHttpError extends Error {
   constructor(
     public readonly status: number,
@@ -50,6 +54,25 @@ function assertSafeApiPath(path: string): void {
   }
 }
 
+async function performRequest(
+  path: string,
+  init: RequestInit,
+): Promise<Response> {
+  assertSafeApiPath(path);
+
+  const requestUrl = `${getApiBaseUrl()}${path}`;
+
+  try {
+    return await fetch(requestUrl, {
+      ...init,
+      cache: "no-store",
+      signal: AbortSignal.timeout(API_TIMEOUT_MS),
+    });
+  } catch {
+    throw new Error(`API request could not reach the backend for ${path}.`);
+  }
+}
+
 async function parseJsonResponse(
   response: Response,
   path: string,
@@ -61,58 +84,63 @@ async function parseJsonResponse(
   }
 }
 
-export async function apiGet(path: string): Promise<unknown> {
-  assertSafeApiPath(path);
-
-  const requestUrl = `${getApiBaseUrl()}${path}`;
-
-  let response: Response;
-
-  try {
-    response = await fetch(requestUrl, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-      },
-      cache: "no-store",
-      signal: AbortSignal.timeout(API_TIMEOUT_MS),
-    });
-  } catch {
-    throw new Error(`API request could not reach the backend for ${path}.`);
-  }
-
+function assertSuccessfulResponse(response: Response, path: string): void {
   if (!response.ok) {
     throw new ApiHttpError(response.status, path);
   }
+}
+
+export async function apiGet(
+  path: string,
+  options: ApiRequestOptions = {},
+): Promise<unknown> {
+  const response = await performRequest(path, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      ...options.headers,
+    },
+  });
+
+  assertSuccessfulResponse(response, path);
 
   return parseJsonResponse(response, path);
 }
 
-export async function apiPost(path: string, body: unknown): Promise<unknown> {
-  assertSafeApiPath(path);
+export async function apiPost(
+  path: string,
+  body: unknown,
+  options: ApiRequestOptions = {},
+): Promise<unknown> {
+  const response = await performRequest(path, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+    body: JSON.stringify(body),
+  });
 
-  const requestUrl = `${getApiBaseUrl()}${path}`;
-
-  let response: Response;
-
-  try {
-    response = await fetch(requestUrl, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-      cache: "no-store",
-      signal: AbortSignal.timeout(API_TIMEOUT_MS),
-    });
-  } catch {
-    throw new Error(`API request could not reach the backend for ${path}.`);
-  }
-
-  if (!response.ok) {
-    throw new ApiHttpError(response.status, path);
-  }
+  assertSuccessfulResponse(response, path);
 
   return parseJsonResponse(response, path);
+}
+
+export async function apiPostNoContent(
+  path: string,
+  body: unknown,
+  options: ApiRequestOptions = {},
+): Promise<void> {
+  const response = await performRequest(path, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+    body: JSON.stringify(body),
+  });
+
+  assertSuccessfulResponse(response, path);
 }

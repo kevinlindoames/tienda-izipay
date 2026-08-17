@@ -1,10 +1,21 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
+
+import { useCartStore } from "@/features/cart/stores/cart.store";
 
 import { SiteHeader } from "./site-header";
 
 describe("SiteHeader", () => {
-  it("muestra marca, navegacion desktop y accion derecha", () => {
+  beforeEach(() => {
+    localStorage.clear();
+
+    useCartStore.setState({
+      items: [],
+      hasHydrated: false,
+    });
+  });
+
+  it("shows brand, desktop navigation, action and cart", () => {
     render(
       <SiteHeader
         content={{
@@ -26,13 +37,21 @@ describe("SiteHeader", () => {
 
     expect(navigation).toHaveTextContent("Productos");
     expect(navigation).toHaveTextContent("Soluciones");
-    expect(screen.getByRole("link", { name: "Soporte" })).toHaveAttribute(
-      "href",
-      "#contact",
-    );
+
+    expect(
+      screen.getByRole("link", {
+        name: "Soporte",
+      }),
+    ).toHaveAttribute("href", "#contact");
+
+    expect(
+      screen.getByRole("link", {
+        name: "Carrito, 0 unidades",
+      }),
+    ).toHaveAttribute("href", "/carrito");
   });
 
-  it("tolera una navegacion vacia", () => {
+  it("supports empty navigation while keeping cart access", () => {
     render(
       <SiteHeader
         content={{
@@ -43,8 +62,17 @@ describe("SiteHeader", () => {
     );
 
     expect(screen.getByText("Marca sin enlaces")).toBeInTheDocument();
+
     expect(
-      screen.getByRole("navigation", { name: "Navegacion principal" }),
+      screen.getByRole("navigation", {
+        name: "Navegacion principal",
+      }),
     ).toBeEmptyDOMElement();
+
+    expect(
+      screen.getByRole("link", {
+        name: "Carrito, 0 unidades",
+      }),
+    ).toBeInTheDocument();
   });
 });

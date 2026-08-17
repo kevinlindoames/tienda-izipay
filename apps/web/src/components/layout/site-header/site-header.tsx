@@ -3,6 +3,7 @@ import type { ReactElement } from "react";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import type { SiteHeaderContent } from "@/content/site.types";
+import { CartIndicator } from "@/features/cart/components/cart-indicator";
 
 import { MobileMenu } from "./mobile-menu";
 
@@ -45,15 +46,19 @@ export function SiteHeader({ content }: SiteHeaderProps): ReactElement {
           ))}
         </nav>
 
-        <div className="hidden justify-self-end md:flex">
-          {desktopAction ? (
-            <Button href={desktopAction.href} variant="ghost">
-              {desktopAction.label}
-            </Button>
-          ) : null}
-        </div>
+        <div className="flex items-center justify-self-end gap-1">
+          <CartIndicator />
 
-        <MobileMenu navigation={content.navigation} />
+          {desktopAction ? (
+            <div className="hidden md:block">
+              <Button href={desktopAction.href} variant="ghost">
+                {desktopAction.label}
+              </Button>
+            </div>
+          ) : null}
+
+          <MobileMenu navigation={content.navigation} />
+        </div>
       </Container>
     </header>
   );

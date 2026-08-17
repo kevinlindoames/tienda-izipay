@@ -1,8 +1,9 @@
 import Link from "next/link";
 import type { ReactElement } from "react";
 
-import { Button } from "@/components/ui/button";
 import { ResponsiveMedia } from "@/components/ui/responsive-media";
+import { AddToCartButton } from "@/features/cart/components/add-to-cart-button";
+import { toCartProductSnapshot } from "@/features/cart/utils/cart-product";
 
 import type { Product } from "../types/catalog.types";
 import { formatMoney } from "../utils/format-money";
@@ -25,6 +26,8 @@ export function ProductDetail({ product }: ProductDetailProps): ReactElement {
     .filter((image) => image.id !== primaryImage?.id)
     .sort((left, right) => left.position - right.position);
 
+  const cartProduct = toCartProductSnapshot(product);
+
   return (
     <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
       <div>
@@ -40,7 +43,7 @@ export function ProductDetail({ product }: ProductDetailProps): ReactElement {
         {secondaryImages.length > 0 ? (
           <div
             className="mt-4 grid grid-cols-2 gap-4"
-            aria-label="Galería secundaria"
+            aria-label="Galeria secundaria"
           >
             {secondaryImages.map((image) => (
               <ResponsiveMedia
@@ -61,7 +64,7 @@ export function ProductDetail({ product }: ProductDetailProps): ReactElement {
           href="/productos"
           className="inline-flex min-h-11 items-center text-sm font-medium text-[var(--color-text-muted)] hover:text-[var(--color-text)] focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)]"
         >
-          ← Volver al catálogo
+          &larr; Volver al catalogo
         </Link>
 
         <p className="mt-6 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-text-muted)]">
@@ -93,15 +96,17 @@ export function ProductDetail({ product }: ProductDetailProps): ReactElement {
         </p>
 
         <div className="mt-8">
-          <Button disabled>
-            Agregar al carrito — disponible en el siguiente bloque
-          </Button>
+          <AddToCartButton
+            product={cartProduct}
+            disabled={product.availability === "out-of-stock"}
+          />
         </div>
 
         <div className="mt-10 border-t border-[var(--color-border)] pt-8">
           <h2 className="text-xl font-semibold tracking-[-0.02em] text-[var(--color-text)]">
-            Descripción
+            Descripcion
           </h2>
+
           <p className="mt-4 max-w-2xl text-base leading-7 text-[var(--color-text-muted)]">
             {product.description}
           </p>
@@ -109,9 +114,8 @@ export function ProductDetail({ product }: ProductDetailProps): ReactElement {
 
         <div className="mt-8 rounded-[var(--radius-card)] bg-[var(--color-surface-soft)] p-5">
           <p className="text-sm leading-6 text-[var(--color-text-muted)]">
-            Los precios y las imágenes de este bloque son datos provisionales
-            del frontend. La fuente autoritativa se implementará posteriormente
-            mediante NestJS, PostgreSQL y Storage.
+            El precio y disponibilidad mostrados provienen del catalogo actual.
+            Antes del checkout, NestJS volvera a validar precio y stock.
           </p>
         </div>
       </div>

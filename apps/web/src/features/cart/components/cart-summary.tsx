@@ -32,6 +32,7 @@ export function CartSummary({
       <dl className="mt-6 space-y-4">
         <div className="flex items-center justify-between gap-4 text-sm">
           <dt className="text-[var(--color-text-muted)]">Unidades</dt>
+
           <dd className="font-medium text-[var(--color-text)]">{unitCount}</dd>
         </div>
 
@@ -39,6 +40,7 @@ export function CartSummary({
           <dt className="text-base font-semibold text-[var(--color-text)]">
             Subtotal referencial
           </dt>
+
           <dd className="text-xl font-semibold text-[var(--color-text)]">
             {formatMoney(subtotal)}
           </dd>
@@ -46,14 +48,13 @@ export function CartSummary({
       </dl>
 
       <div className="mt-6">
-        <Button disabled className="w-full">
+        <Button href="/checkout" className="w-full">
           Continuar al checkout
         </Button>
       </div>
 
       <p className="mt-4 text-xs leading-5 text-[var(--color-text-muted)]">
-        El checkout se habilitara en el siguiente bloque. Antes de crear el
-        pedido, NestJS volvera a validar precios y stock.
+        Antes de crear el pedido, NestJS volvera a validar precios y stock.
       </p>
     </aside>
   );

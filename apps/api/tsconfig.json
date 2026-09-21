@@ -27,6 +27,7 @@
     "src/**/*.ts",
     "test/**/*.ts",
     "prisma/**/*.ts",
-    "prisma.config.ts"
+    "prisma.config.ts",
+    "prisma.e2e.config.ts"
   ]
 }

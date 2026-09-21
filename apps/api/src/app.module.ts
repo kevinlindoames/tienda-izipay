@@ -15,6 +15,8 @@ import { OrdersModule } from './orders/orders.module';
       isGlobal: true,
       cache: true,
       envFilePath: '.env',
+      // The E2E harness supplies a restricted runtime credential explicitly.
+      ignoreEnvFile: process.env.E2E_MUTABLE === '1',
       validate: validateEnvironment,
     }),
     PrismaModule,

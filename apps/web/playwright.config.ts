@@ -6,6 +6,8 @@ process.env.API_BASE_URL = localApiBaseUrl;
 
 export default defineConfig({
   testDir: "./e2e",
+  // Mutable tests require their guarded runner and isolated database/servers.
+  testIgnore: ["**/admin-products/**"],
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 2 : 0,

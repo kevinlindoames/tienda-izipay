@@ -6,13 +6,13 @@ This repository contains the Tienda Izipay ecommerce application.
 
 All automated coding agents working in this repository must prioritize:
 
-* correctness;
-* maintainability;
-* security;
-* accessibility;
-* reproducibility;
-* minimal and controlled scope;
-* explicit validation before integration.
+- correctness;
+- maintainability;
+- security;
+- accessibility;
+- reproducibility;
+- minimal and controlled scope;
+- explicit validation before integration.
 
 Do not optimize for speed at the expense of these requirements.
 
@@ -24,51 +24,51 @@ This is a pnpm monorepo managed with Turborepo.
 
 Main applications:
 
-* `apps/web`: Next.js frontend.
-* `apps/api`: NestJS backend.
+- `apps/web`: Next.js frontend.
+- `apps/api`: NestJS backend.
 
 Main technology stack:
 
 ### Frontend
 
-* Next.js 16.
-* React 19.
-* TypeScript.
-* App Router.
-* Tailwind CSS 4.
-* Motion.
-* Zustand for client-side UI/application state.
-* TanStack Query for remote/server state when appropriate.
-* React Hook Form + Zod for forms and validation.
+- Next.js 16.
+- React 19.
+- TypeScript.
+- App Router.
+- Tailwind CSS 4.
+- Motion.
+- Zustand for client-side UI/application state.
+- TanStack Query for remote/server state when appropriate.
+- React Hook Form + Zod for forms and validation.
 
 ### Backend
 
-* NestJS 11.
-* TypeScript.
-* Prisma 7.
-* PostgreSQL.
+- NestJS 11.
+- TypeScript.
+- Prisma 7.
+- PostgreSQL.
 
 ### Testing
 
 Frontend:
 
-* Vitest.
-* Testing Library.
-* Playwright.
-* Axe accessibility checks where applicable.
+- Vitest.
+- Testing Library.
+- Playwright.
+- Axe accessibility checks where applicable.
 
 Backend:
 
-* Jest.
-* Supertest.
+- Jest.
+- Supertest.
 
 ### Tooling
 
-* Node.js 24.x.
-* pnpm 11.x.
-* Turborepo.
-* ESLint.
-* Prettier.
+- Node.js 24.x.
+- pnpm 11.x.
+- Turborepo.
+- ESLint.
+- Prettier.
 
 Use the versions already pinned by the repository and lockfile.
 
@@ -82,10 +82,10 @@ Use `pnpm` only.
 
 Never use:
 
-* `npm install`;
-* `npm ci`;
-* `yarn`;
-* `bun`.
+- `npm install`;
+- `npm ci`;
+- `yarn`;
+- `bun`.
 
 Prefer the repository scripts from the root `package.json`.
 
@@ -105,12 +105,12 @@ In Next.js App Router, components must be Server Components by default.
 
 Add `"use client"` only when the component genuinely requires client behavior such as:
 
-* browser events;
-* hooks requiring the browser;
-* local interactive state;
-* Zustand;
-* React Hook Form;
-* Motion when client execution is necessary.
+- browser events;
+- hooks requiring the browser;
+- local interactive state;
+- Zustand;
+- React Hook Form;
+- Motion when client execution is necessary.
 
 Keep client boundaries as small as reasonably possible.
 
@@ -134,11 +134,11 @@ Do not duplicate logic that already has an established abstraction.
 
 Use:
 
-* Server Components and server `fetch` for public/server-rendered data when appropriate.
-* Zustand for local client state such as cart or temporary client state.
-* TanStack Query for remote mutable server state where it provides real value.
-* URL `searchParams` for shareable filters, searches and pagination when appropriate.
-* React Hook Form + Zod for forms.
+- Server Components and server `fetch` for public/server-rendered data when appropriate.
+- Zustand for local client state such as cart or temporary client state.
+- TanStack Query for remote mutable server state where it provides real value.
+- URL `searchParams` for shareable filters, searches and pagination when appropriate.
+- React Hook Form + Zod for forms.
 
 Do not introduce Redux or another state-management library without explicit approval.
 
@@ -152,14 +152,14 @@ Do not move authoritative business rules into the browser merely for convenience
 
 The API/database must remain authoritative for:
 
-* products;
-* prices;
-* stock;
-* orders;
-* authentication;
-* authorization;
-* inventory mutations;
-* future payment state.
+- products;
+- prices;
+- stock;
+- orders;
+- authentication;
+- authorization;
+- inventory mutations;
+- future payment state.
 
 Preserve module/service/controller separation already established in the application.
 
@@ -187,8 +187,8 @@ Avoid repeated authentication calls when a protected layout can centralize the o
 
 Roles currently include:
 
-* `OWNER`
-* `ADMIN`
+- `OWNER`
+- `ADMIN`
 
 Never weaken role/authorization checks merely to make a UI flow work.
 
@@ -200,12 +200,12 @@ Izipay payment integration is a future/backend-authoritative concern.
 
 When payment work begins:
 
-* private Izipay credentials must stay in the backend;
-* browser code may receive only appropriate public/form-token information;
-* server responses must be validated;
-* HMAC/signature validation must be server-side;
-* IPN/webhook processing must be authoritative and idempotent;
-* TEST environment must be completed before production activation.
+- private Izipay credentials must stay in the backend;
+- browser code may receive only appropriate public/form-token information;
+- server responses must be validated;
+- HMAC/signature validation must be server-side;
+- IPN/webhook processing must be authoritative and idempotent;
+- TEST environment must be completed before production activation.
 
 Never expose private Izipay credentials through `NEXT_PUBLIC_*` variables or frontend bundles.
 
@@ -217,13 +217,13 @@ Never print, disclose, copy or commit secrets.
 
 Do not display values from:
 
-* `.env`;
-* `.env.local`;
-* production environment variables;
-* database passwords;
-* private API keys;
-* session tokens;
-* private Izipay credentials.
+- `.env`;
+- `.env.local`;
+- production environment variables;
+- database passwords;
+- private API keys;
+- session tokens;
+- private Izipay credentials.
 
 It is acceptable to report that a required variable exists or is missing without printing its value.
 
@@ -231,12 +231,12 @@ Do not modify `.env*` files unless the task explicitly requires it.
 
 Never include secrets in:
 
-* logs;
-* generated reports;
-* test fixtures;
-* commits;
-* screenshots;
-* documentation.
+- logs;
+- generated reports;
+- test fixtures;
+- commits;
+- screenshots;
+- documentation.
 
 ---
 
@@ -259,14 +259,14 @@ Never silently discard local modifications.
 
 Do not run:
 
-* `git commit`;
-* `git push`;
-* `git reset --hard`;
-* destructive checkout/restore commands;
-* force push;
-* history rewriting;
-* rebase;
-* branch deletion.
+- `git commit`;
+- `git push`;
+- `git reset --hard`;
+- destructive checkout/restore commands;
+- force push;
+- history rewriting;
+- rebase;
+- branch deletion.
 
 `git add` must also not be performed as part of ordinary implementation unless the user explicitly approves the integration/closing block.
 
@@ -276,19 +276,19 @@ Implementation and validation should normally leave changes unstaged for review.
 
 When explicit commit approval has been given:
 
-* stage only the intended scope;
-* inspect staged filenames;
-* inspect staged diff;
-* run `git diff --cached --check`;
-* verify no secrets or artifacts are staged;
-* ensure the commit message follows the repository convention;
-* verify the resulting commit.
+- stage only the intended scope;
+- inspect staged filenames;
+- inspect staged diff;
+- run `git diff --cached --check`;
+- verify no secrets or artifacts are staged;
+- ensure the commit message follows the repository convention;
+- verify the resulting commit.
 
 Before push:
 
-* fetch the remote;
-* make sure the target branch has not moved unexpectedly;
-* never force push unless explicitly requested.
+- fetch the remote;
+- make sure the target branch has not moved unexpectedly;
+- never force push unless explicitly requested.
 
 ---
 
@@ -298,12 +298,12 @@ Only modify files necessary for the requested task.
 
 Do not perform unrelated:
 
-* refactors;
-* renames;
-* dependency upgrades;
-* formatting sweeps;
-* cleanup;
-* architectural migrations.
+- refactors;
+- renames;
+- dependency upgrades;
+- formatting sweeps;
+- cleanup;
+- architectural migrations.
 
 If an unrelated problem is discovered:
 
@@ -347,12 +347,12 @@ Before a script modifies repository state, perform a preflight.
 
 Where applicable verify:
 
-* expected repository path;
-* branch;
-* HEAD/base;
-* working tree;
-* staged files;
-* allowed scope.
+- expected repository path;
+- branch;
+- HEAD/base;
+- working tree;
+- staged files;
+- allowed scope.
 
 Never execute destructive commands to "repair" an unexpected state.
 
@@ -394,11 +394,11 @@ Do not weaken tests merely to obtain green output.
 
 Do not:
 
-* delete assertions without justification;
-* ignore console errors to make tests pass;
-* add arbitrary sleeps;
-* increase timeouts as the first solution;
-* skip failing tests without explicit justification.
+- delete assertions without justification;
+- ignore console errors to make tests pass;
+- add arbitrary sleeps;
+- increase timeouts as the first solution;
+- skip failing tests without explicit justification.
 
 Diagnose the root cause.
 
@@ -459,15 +459,15 @@ Accessibility is part of the implementation requirement, not optional polish.
 
 For interactive UI preserve or implement:
 
-* semantic HTML;
-* keyboard operation;
-* visible focus;
-* proper labels;
-* `aria-current` where appropriate;
-* meaningful accessible names;
-* suitable touch target sizes;
-* contrast;
-* reduced-motion behavior where relevant.
+- semantic HTML;
+- keyboard operation;
+- visible focus;
+- proper labels;
+- `aria-current` where appropriate;
+- meaningful accessible names;
+- suitable touch target sizes;
+- contrast;
+- reduced-motion behavior where relevant.
 
 Do not remove accessibility behavior merely to simplify styling.
 
@@ -477,9 +477,9 @@ Do not remove accessibility behavior merely to simplify styling.
 
 Frontend changes must consider:
 
-* mobile;
-* tablet;
-* desktop.
+- mobile;
+- tablet;
+- desktop.
 
 Avoid horizontal document overflow.
 
@@ -513,10 +513,10 @@ Server logs may contain useful diagnostics but must not expose secrets.
 
 When an external service fails, distinguish:
 
-* application defect;
-* test-infrastructure defect;
-* environment defect;
-* third-party service failure.
+- application defect;
+- test-infrastructure defect;
+- environment defect;
+- third-party service failure.
 
 Do not modify application behavior until the actual category is established.
 
@@ -532,12 +532,12 @@ Reports are diagnostic artifacts and must not be committed unless explicitly req
 
 Do not stage:
 
-* `reports/` unless explicitly requested;
-* `.next/`;
-* `node_modules/`;
-* Playwright HTML reports;
-* test-result screenshots/videos;
-* generated temporary output.
+- `reports/` unless explicitly requested;
+- `.next/`;
+- `node_modules/`;
+- Playwright HTML reports;
+- test-result screenshots/videos;
+- generated temporary output.
 
 ---
 
@@ -549,12 +549,12 @@ For substantial work use this sequence:
 
 Understand:
 
-* user request;
-* current repository state;
-* architecture;
-* related code;
-* tests;
-* scope.
+- user request;
+- current repository state;
+- architecture;
+- related code;
+- tests;
+- scope.
 
 ### B. Plan
 
@@ -570,30 +570,30 @@ Make the smallest coherent change that fully solves the task.
 
 Run:
 
-* relevant targeted tests;
-* lint/typecheck/build as applicable;
-* repository quality gates;
-* `git diff --check`;
-* relevant E2E.
+- relevant targeted tests;
+- lint/typecheck/build as applicable;
+- repository quality gates;
+- `git diff --check`;
+- relevant E2E.
 
 ### E. Review
 
 Inspect:
 
-* changed files;
-* diff;
-* architecture;
-* accidental changes;
-* secrets;
-* generated artifacts.
+- changed files;
+- diff;
+- architecture;
+- accidental changes;
+- secrets;
+- generated artifacts.
 
 ### F. Stop before integration
 
 Unless explicit integration approval was already provided:
 
-* do not stage;
-* do not commit;
-* do not push.
+- do not stage;
+- do not commit;
+- do not push.
 
 Report the result and wait for approval.
 
@@ -603,15 +603,15 @@ Report the result and wait for approval.
 
 A coding task is complete only when:
 
-* the requested behavior is implemented;
-* architecture remains consistent;
-* scope is controlled;
-* relevant tests pass;
-* required quality gates pass;
-* no secrets are exposed;
-* no unintended files changed;
-* failures or remaining warnings are disclosed;
-* integration has not exceeded the user's explicit authorization.
+- the requested behavior is implemented;
+- architecture remains consistent;
+- scope is controlled;
+- relevant tests pass;
+- required quality gates pass;
+- no secrets are exposed;
+- no unintended files changed;
+- failures or remaining warnings are disclosed;
+- integration has not exceeded the user's explicit authorization.
 
 Never say a task passed if a mandatory gate failed.
 
@@ -625,11 +625,11 @@ Explain changes clearly enough for a junior developer to follow.
 
 For important findings, report:
 
-* what was found;
-* why it matters;
-* what changed;
-* what was validated;
-* any remaining risk.
+- what was found;
+- why it matters;
+- what changed;
+- what was validated;
+- any remaining risk.
 
 Prefer concise but complete output.
 

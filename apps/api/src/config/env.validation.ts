@@ -1,3 +1,5 @@
+import { validateMutableE2eEnvironment } from './e2e-database-target';
+
 const allowedNodeEnvironments = new Set(['development', 'test', 'production']);
 
 function requireDatabaseUrl(value: unknown): string {
@@ -41,6 +43,20 @@ function resolvePort(value: unknown): number {
 export function validateEnvironment(
   config: Record<string, unknown>,
 ): Record<string, unknown> {
+  if (config.E2E_MUTABLE === '1') {
+    const target = validateMutableE2eEnvironment(config, 'runtime');
+
+    return {
+      ...config,
+      DATABASE_URL_E2E: target.connectionString,
+      E2E_PROJECT_REF: target.projectRef,
+      E2E_RUN_ID: target.runId,
+      E2E_SCHEMA: target.schema,
+      NODE_ENV: 'test',
+      PORT: resolvePort(config.PORT),
+    };
+  }
+
   const nodeEnvironment =
     typeof config.NODE_ENV === 'string' && config.NODE_ENV.length > 0
       ? config.NODE_ENV

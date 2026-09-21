@@ -6,7 +6,8 @@
     "dist",
     "**/*spec.ts",
     "prisma",
-    "prisma.config.ts"
+    "prisma.config.ts",
+    "prisma.e2e.config.ts"
   ],
   "compilerOptions": {
     "rootDir": "./src",

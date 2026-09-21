@@ -6,6 +6,7 @@
   "include": [
     "prisma/**/*.ts",
     "prisma.config.ts",
+    "prisma.e2e.config.ts",
     "src/generated/prisma/**/*.ts"
   ]
 }

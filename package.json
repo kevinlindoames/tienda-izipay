@@ -35,7 +35,9 @@
     "db:seed": "pnpm --filter api prisma:seed",
     "db:studio": "pnpm --filter api prisma:studio",
     "db:smoke": "pnpm --filter api prisma:smoke",
-    "db:typecheck": "pnpm --filter api prisma:typecheck"
+    "db:typecheck": "pnpm --filter api prisma:typecheck",
+    "db:e2e:validate": "pnpm --filter api db:e2e:validate",
+    "test:e2e:mutable": "pnpm --filter api test:e2e:mutable"
   },
   "devDependencies": {
     "prettier": "3.9.6",
